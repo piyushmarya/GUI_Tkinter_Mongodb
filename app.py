@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from db import MongoOperations
 
 db_object = MongoOperations()
@@ -16,12 +17,15 @@ class GuiLogin:
         password = e4.get()
         repass = e5.get()
         if username == "" or password == "" or repass == "":
-            print("Enter all Fields")
+            messagebox.showerror("Forgot Password", "Enter all Fields")
         elif password != repass:
-            print("Entered passwords do not match")
+            messagebox.showerror("Forgot Password", "Entered passwords do not match")
         else:
-            db_object.update_data_in_db(username, password)
-            window.destroy()
+            if db_object.update_data_in_db(username, password):
+                messagebox.showinfo("Forgot  Password", "Password changed succesfully")
+                window.destroy()
+            else:
+                messagebox.showerror("Forgot Password", "User does not exist")
 
     def forgot_pass_form(self):
         window = Tk()
@@ -50,24 +54,23 @@ class GuiLogin:
 
     def fetch_signin_values(self):
         if self.e1.get() == "" or self.e2.get() == "":
-            print("Enter Fields")
+            messagebox.showerror("SignIn", "Enter all Fields")
         elif db_object.fetch_data_from_db(self.e1.get(), self.e2.get()):
-            print("Logged in Successfully")
+            messagebox.showinfo("SignIn", "Logged in Successfully")
         else:
-            print("incorrect username/password")
+            messagebox.showerror("SignIn", "incorrect username/password")
 
     def fetch_signup(self, e3, e4, e5, window):
         username = e3.get()
         password = e4.get()
         email = e5.get()
         if username == "" or password == "" or email == "":
-            print("Enter Fields")
+            messagebox.showerror("SignUp", "Enter all Fields")
         elif db_object.dump_data_to_db(username, password, email):
-            print("Sign Up successfully")
+            messagebox.showinfo("SignUp", "Sign Up successfull")
             window.destroy()
         else:
-            print("User already Exists")
-            print("Change Username")
+            messagebox.showerror("SignUp", "User already Exists \nChange Username")
 
     def login_form(self):
         self.main_window.configure(background='light green')
@@ -96,7 +99,7 @@ class GuiLogin:
         e5 = Entry(window)
         window.configure(background='light green')
         window.title("SignUp form")
-        window.geometry("800x400")
+        window.geometry("400x200")
         heading = Label(window, text="Form", bg="light green")
         name = Label(window, text='Username', bg="light green")
         password = Label(window, text='Password', bg="light green")
