@@ -33,5 +33,6 @@ class MongoOperations:
         if self.fetch_data_from_db(username, password, True):
             self.info["Password"] = password
             self.collection.save(self.info)
+            return True
         else:
-            print("Username does not exist")
+            return False
